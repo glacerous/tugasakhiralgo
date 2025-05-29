@@ -161,6 +161,10 @@ void tambahLagu(Playlist* pl) {
     cout << "Genre: "; getline(cin, genre);
     cout << "Durasi (detik): "; cin >> durasi; cin.ignore();
 
+    if (judul.empty() || artis.empty() || genre.empty() || durasi <= 0) {
+    cout << "Data lagu tidak valid. Lagu tidak ditambahkan.\n";
+    return;
+}
     Lagu* baru = new Lagu{judul, artis, genre, durasi, nullptr};
     if (!pl->head) pl->head = baru;
     else {
@@ -215,7 +219,7 @@ void urutkanLagu(Playlist* pl) {
         }
     } while (swapped);
 
-    cout << "Playlist berhasil diurutkan berdasarkan durasi (pendek → panjang).\n";
+    cout << "Playlist berhasil diurutkan berdasarkan durasi (pendek -> panjang).\n";
     simpanKeFile();
 }
 
