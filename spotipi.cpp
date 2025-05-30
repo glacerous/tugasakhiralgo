@@ -26,12 +26,14 @@ void tampilkanMenuPlaylist(Playlist*);
 Playlist* cariPlaylist(const string&);
 void tambahLagu(Playlist*);
 void tampilkanPlaylist(Playlist*);
+void tampilkanStatistik(Playlist*);
 void hapusLagu(Playlist*);
 void hapusPlaylist(const string&);
 void simpanKeFile();
 void bacaDariFile();
 void hapusSemuaPlaylist();
 void urutkanLagu(Playlist* pl);
+void tampilkanRecap();
 
 int main() {
     bacaDariFile();
@@ -45,6 +47,7 @@ void menuUtama() {
     do {
         cout << "\n1.  Buat Playlist" << endl;
         cout << "2.  Lihat Playlist" << endl;
+        cout << "3.  Recap" << endl;
         cout << "0.  Keluar" << endl;
         cout << "> Pilih Menu : ";
         cin >> pilihan;
@@ -56,6 +59,9 @@ void menuUtama() {
                 break;
             case 2:
                 lihatDaftarPlaylist();
+                break;
+            case 3:
+                tampilkanRecap();
                 break;
             case 0:
                 cout << "Keluar dari program.\n";
@@ -113,7 +119,8 @@ void tampilkanMenuPlaylist(Playlist* pl) {
         cout << " 2. Tambah lagu ke playlist\n";
         cout << " 3. Urutkan lagu berdasarkan durasi (short - long)\n";
         cout << " 4. Hapus lagu dari playlist\n";
-        cout << " 5. Hapus playlist\n";
+        cout << " 5. Lihat statistik playlist\n";
+        cout << " 6. Hapus playlist\n";
         
         cout << " 0. Kembali ke menu utama\n";
         cout << "\n > Pilih menu: ";
@@ -134,6 +141,9 @@ void tampilkanMenuPlaylist(Playlist* pl) {
                 hapusLagu(pl);
                 break;
             case 5:
+                tampilkanStatistik(pl);
+                break;
+            case 6:
                 hapusPlaylist(pl->nama);
                 return; // kembali ke menu utama
             case 0:
@@ -203,7 +213,7 @@ void urutkanLagu(Playlist* pl) {
         while (current->next) {
             next = current->next;
             if (current->durasi > next->durasi) {
-                // Tukar node
+             
                 if (prev) prev->next = next;
                 else pl->head = next;
 
@@ -262,6 +272,24 @@ void hapusPlaylist(const string& nama) {
     delete temp;
     cout << "Playlist berhasil dihapus.\n";
     simpanKeFile();
+}
+
+void tampilkanStatistik(Playlist* pl) {
+    int total = 0, totalDurasi = 0;
+    Lagu* temp = pl->head;
+    while (temp) {
+        total++;
+        totalDurasi += temp->durasi;
+        temp = temp->next;
+    }
+
+    cout << "\n--- Statistik Playlist ---\n";
+    cout << "Jumlah lagu     : " << total << endl;
+    cout << "Total durasi    : " << totalDurasi << " detik\n";
+    if (total > 0)
+        cout << "Durasi rata-rata: " << (totalDurasi / total) << " detik\n";
+    else
+        cout << "Playlist masih kosong.\n";
 }
 
 void simpanKeFile() {
@@ -326,3 +354,51 @@ void hapusSemuaPlaylist() {
         delete p;
     }   
 }
+
+void tampilkanRecap() {
+    int totalPlaylist = 0, totalLagu = 0, durasiTotal = 0;
+    int durasiTerpendek = INT_MAX, durasiTerpanjang = 0;
+    string laguTerpendek, laguTerpanjang;
+    string playlistTerbanyak;
+    int maxLagu = 0;
+
+    Playlist* p = daftarPlaylist;
+    while (p) {
+        totalPlaylist++;
+        int jumlahLagu = 0;
+        Lagu* l = p->head;
+        while (l) {
+            jumlahLagu++;
+            totalLagu++;
+            durasiTotal += l->durasi;
+            if (l->durasi < durasiTerpendek) {
+                durasiTerpendek = l->durasi;
+                laguTerpendek = l->judul + " - " + l->artis;
+            }
+            if (l->durasi > durasiTerpanjang) {
+                durasiTerpanjang = l->durasi;
+                laguTerpanjang = l->judul + " - " + l->artis;
+            }
+            l = l->next;
+        }
+        if (jumlahLagu > maxLagu) {
+            maxLagu = jumlahLagu;
+            playlistTerbanyak = p->nama;
+        }
+        p = p->next;
+    }
+
+    cout << "\n========== Recap ==========\n";
+    cout << "Jumlah Playlist       : " << totalPlaylist << endl;
+    cout << "Jumlah Lagu Total     : " << totalLagu << endl;
+    if (totalLagu > 0) {
+        cout << "Rata-rata Durasi Lagu : " << durasiTotal / totalLagu << " detik" << endl;
+        cout << "Lagu Terpendek        : " << laguTerpendek << " (" << durasiTerpendek << " detik)\n";
+        cout << "Lagu Terpanjang       : " << laguTerpanjang << " (" << durasiTerpanjang << " detik)\n";
+        cout << "Playlist Terbanyak    : " << playlistTerbanyak << " (" << maxLagu << " lagu)\n";
+    } else {
+        cout << "Belum ada lagu yang dimasukkan.\n";
+    }
+    cout << "======================================\n";
+}
+
