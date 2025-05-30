@@ -86,7 +86,7 @@ void buatPlaylist() {
     cout << "\n Playlist [" << nama << "] berhasil dibuat!" << endl;
     cout << " Saatnya mengisi playlist ini dengan lagu favoritmu!" << endl;
 
-    simpanKeFile(); // otomatis simpan
+    simpanKeFile(); 
     tampilkanMenuPlaylist(baru);
 }
 
@@ -170,7 +170,6 @@ void tambahLagu(Playlist* pl) {
     cout << "Artis: "; getline(cin, artis);
     cout << "Genre: "; getline(cin, genre);
 
-    // Validasi input angka
     while (true) {
         cout << "Durasi (detik): ";
         getline(cin, sdurasi);
