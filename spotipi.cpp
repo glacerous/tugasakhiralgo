@@ -164,17 +164,31 @@ Playlist* cariPlaylist(const string& nama) {
 }
 
 void tambahLagu(Playlist* pl) {
-    string judul, artis, genre;
+    string judul, artis, genre, sdurasi;
     int durasi;
     cout << "Judul: "; getline(cin, judul);
     cout << "Artis: "; getline(cin, artis);
     cout << "Genre: "; getline(cin, genre);
-    cout << "Durasi (detik): "; cin >> durasi; cin.ignore();
 
-    if (judul.empty() || artis.empty() || genre.empty() || durasi <= 0) {
-    cout << "Data lagu tidak valid. Lagu tidak ditambahkan.\n";
-    return;
-}
+    // Validasi input angka
+    while (true) {
+        cout << "Durasi (detik): ";
+        getline(cin, sdurasi);
+        bool valid = true;
+        for (char c : sdurasi) {
+            if (!isdigit(c)) {
+                valid = false;
+                break;
+            }
+        }
+        if (!valid || sdurasi.empty()) {
+            cout << "Input harus berupa angka positif!\n";
+            continue;
+        }
+        durasi = stoi(sdurasi);
+        break;
+    }
+
     Lagu* baru = new Lagu{judul, artis, genre, durasi, nullptr};
     if (!pl->head) pl->head = baru;
     else {
