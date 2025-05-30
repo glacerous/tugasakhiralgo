@@ -45,6 +45,9 @@ int main() {
 void menuUtama() {
     int pilihan;
     do {
+        cout << "\n------------------------"<< endl;
+        cout << "        Spotipy        "<< endl;
+        cout << "------------------------"<< endl;
         cout << "\n1.  Buat Playlist" << endl;
         cout << "2.  Lihat Playlist" << endl;
         cout << "3.  Recap" << endl;
@@ -414,4 +417,3 @@ void tampilkanRecap() {
     }
     cout << "======================================\n";
 }
-
